@@ -5,7 +5,7 @@ int ledPin = 17;
 int ledState = 125;
 int ledONOFF = 0;
 int i = 0;
-
+int DspState;
 
 void setup() {
   // put your setup code here, to run once:
@@ -17,7 +17,7 @@ void setup() {
   M5.Lcd.setTextColor(BLACK);
   M5.Lcd.setCursor(10,100);
   M5.Lcd.setTextSize(4);
-  M5.Lcd.print("PWM Dimmer:)");
+  M5.Lcd.drawString("PWM Dimmer",10,100, 1);
 }
 
 void loop() {
@@ -25,36 +25,50 @@ void loop() {
 
  //---------------dimming up--------------------
   if(M5.BtnA.isPressed()){
+    //M5.Lcd.clear();
+    M5.Lcd.fillScreen(WHITE);
     ledState += 2;
     if(ledState > 240)
       ledState = 240;
       ledcWrite(pwmChannel, ledState);
-      delay(25);
+      delay(0);
       i = 0;
+       DspState = (ledState*10) / 24;
+       M5.Lcd.drawString("Dim",10,100, 1);
+       M5.Lcd.drawNumber(DspState,100,100, 1);
+       M5.Lcd.drawString("%",180,100, 1);
   }
 
  //--------------dimming down-------------------
   if(M5.BtnB.isPressed()){
-
+   M5.Lcd.fillScreen(WHITE);
     ledState -=2;
     if(ledState < 15)
       ledState = 15;
       ledcWrite(pwmChannel, ledState);
-      delay(25);
+      delay(0);
       i= 0;
-
+       DspState = (ledState*10) / 24;
+       M5.Lcd.drawString("Dim",10,100, 1);
+       M5.Lcd.drawNumber(DspState,100,100, 1);
+       M5.Lcd.drawString("%",180,100, 1);
     }
  //-----------------on and off-----------------
   if(M5.BtnC.isPressed()){
+       M5.Lcd.fillScreen(WHITE);
     if(i == 0){
+       M5.Lcd.fillScreen(WHITE);
       ledONOFF = 1;
       ledcWrite(pwmChannel, ledONOFF);
       delay(300);
+      M5.Lcd.drawString("OFF",130,100, 1);
     }
     
     if(i == 1){
+       M5.Lcd.fillScreen(WHITE);
       ledcWrite(pwmChannel, ledState);
-      delay(300);  
+      delay(300);
+      M5.Lcd.drawString("ON",130,100, 1);  
     }
     
   i = !i;
